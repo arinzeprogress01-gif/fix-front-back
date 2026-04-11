@@ -14,9 +14,31 @@ export default function CourseOverview() {
     const [openModule, setOpenModule] = useState(null);
     const [progressData, setProgressData] = useState(null);
 
+    // 🔥 NEW: backend course
+    const [backendCourse, setBackendCourse] = useState(null);
+
     const { id } = useParams();
 
-    const courses = courseType.find((item) => item.id === Number(id));
+    // ✅ DUMMY (STAYS)
+    const dummyCourse = courseType.find((item) => item.id === Number(id));
+
+    // 🔥 FETCH BACKEND COURSE (MATCH BY INDEX SAME AS COURSES PAGE)
+    useEffect(() => {
+        const fetchCourse = async () => {
+            try {
+                const res = await fetch("https://talentflowbackend.onrender.com/api/courses");
+                const data = await res.json();
+
+                const found = data[Number(id) - 1];
+                setBackendCourse(found);
+
+            } catch (err) {
+                console.error("Error fetching course:", err);
+            }
+        };
+
+        fetchCourse();
+    }, [id]);
 
     // 🔥 FETCH REAL PROGRESS
     useEffect(() => {
@@ -38,44 +60,55 @@ export default function CourseOverview() {
         fetchProgress();
     }, []);
 
-    // 🔥 MATCH COURSE PROGRESS
+    // ❌ SAFETY
+    if (!dummyCourse) return <p>Course not available</p>;
+
+    // ✅ MERGE (THIS IS THE MAGIC 🔥)
+    const course = {
+        ...dummyCourse,
+        title: backendCourse?.title || dummyCourse.title,
+        image: backendCourse?.image || dummyCourse.image,
+        author: backendCourse?.instructor || dummyCourse.author,
+        category: backendCourse?.category || dummyCourse.category,
+        text: backendCourse?.description || dummyCourse.text,
+    };
+
+    // 🔥 MATCH COURSE PROGRESS (SAFE)
     const courseProgress = progressData?.courses?.find(
-        c => c.title === courses?.title
+        c => c.title === course.title
     );
 
     const percent = courseProgress?.progress || 0;
 
-    if (!courses) return <p>Courses not available</p>;
-
     return (
         <>
             <SideBar title="Courses">
-                <div className="w-full h-auto">
+                <div className="h-auto w-full">
 
                     {/* HEADER */}
-                    <div className="w-full h-80 relative">
-                        <img src={courses.image} alt="Course" className="w-full h-full object-cover" />
+                    <div className="h-80 relative w-full">
+                        <img src={course.image} alt="Course" className="h-full object-cover w-full" />
 
-                        <div className="absolute top-0 p-5 left-0 w-full h-full bg-gradient-to-t from-black/70 to-transparent">
-                            <Link to="/student-course" className="flex items-center text-white font-semibold">
+                        <div className="absolute bg-gradient-to-t from-black/70 h-full left-0 p-5 to-transparent top-0 w-full">
+                            <Link to="/student-course" className="flex font-semibold items-center text-white">
                                 <LuArrowLeft size={15} />
                                 <p className="ml-1">Back to Courses</p>
                             </Link>
 
-                            <div className="mt-10 lg:mt-20 text-white">
-                                <p className="bg-[#1A7A4A] text-xs px-3 py-1 rounded-full w-fit">
-                                    {courses.category}
+                            <div className="lg:mt-20 mt-10 text-white">
+                                <p className="bg-[#1A7A4A] px-3 py-1 rounded-full text-xs w-fit">
+                                    {course.category}
                                 </p>
 
-                                <h1 className="text-3xl font-semibold mt-2">
-                                    {courses.title}
+                                <h1 className="font-semibold mt-2 text-3xl">
+                                    {course.title}
                                 </h1>
 
-                                <p className="text-white/80">by {courses.author}</p>
+                                <p className="text-white/80">by {course.author}</p>
 
                                 <div className="flex gap-4 mt-2 text-sm">
-                                    <p>{courses.weeks} weeks</p>
-                                    <p>{courses.modules} modules</p>
+                                    <p>{course.weeks} weeks</p>
+                                    <p>{course.modules} modules</p>
                                     <p className="font-semibold">{percent}% Complete</p>
                                 </div>
                             </div>
@@ -84,10 +117,10 @@ export default function CourseOverview() {
 
                     {/* BODY */}
                     <div className="p-5">
-                        <div className="bg-white rounded-xl border p-5">
+                        <div className="bg-white border p-5 rounded-xl">
 
                             {/* TABS */}
-                            <div className="flex gap-4 border-b mb-4">
+                            <div className="border-b flex gap-4 mb-4">
                                 <button onClick={() => setActiveTab("overview")}>Overview</button>
                                 <button onClick={() => setActiveTab("content")}>Content</button>
                                 <button onClick={() => setActiveTab("progress")}>Progress</button>
@@ -96,12 +129,12 @@ export default function CourseOverview() {
                             {/* OVERVIEW */}
                             {activeTab === "overview" && (
                                 <div>
-                                    <h3 className="text-xl font-semibold mb-3">About this Course</h3>
-                                    <p>{courses.text}</p>
+                                    <h3 className="font-semibold mb-3 text-xl">About this Course</h3>
+                                    <p>{course.text}</p>
 
                                     <div className="mt-5">
                                         {percent === 0 && (
-                                            <button className="bg-[#1A7A4A] text-white px-4 py-2 rounded">
+                                            <button className="bg-[#1A7A4A] px-4 py-2 rounded text-white">
                                                 Enroll Now
                                             </button>
                                         )}
@@ -109,21 +142,21 @@ export default function CourseOverview() {
                                         {percent > 0 && percent < 100 && (
                                             <>
                                                 <p>{percent}% Complete</p>
-                                                <div className="w-full bg-gray-200 h-2 mt-2">
+                                                <div className="bg-gray-200 h-2 mt-2 w-full">
                                                     <div
                                                         className="bg-green-600 h-2"
                                                         style={{ width: `${percent}%` }}
                                                     />
                                                 </div>
 
-                                                <button className="mt-4 bg-[#1A7A4A] text-white px-4 py-2 rounded">
+                                                <button className="bg-[#1A7A4A] mt-4 px-4 py-2 rounded text-white">
                                                     Continue Learning
                                                 </button>
                                             </>
                                         )}
 
                                         {percent === 100 && (
-                                            <p className="text-green-600 font-semibold">
+                                            <p className="font-semibold text-green-600">
                                                 Course Completed 🎉
                                             </p>
                                         )}
@@ -131,14 +164,14 @@ export default function CourseOverview() {
                                 </div>
                             )}
 
-                            {/* CONTENT (STILL STATIC) */}
+                            {/* CONTENT (STILL DUMMY 🔥) */}
                             {activeTab === "content" && (
                                 <div>
-                                    {courses.modulesView.map((module) => (
-                                        <div key={module.id} className="border p-3 mb-3 rounded">
+                                    {course.modulesView.map((module) => (
+                                        <div key={module.id} className="border mb-3 p-3 rounded">
 
                                             <button
-                                                onClick={() => setOpenModule(module.id)}
+                                                onClick={() => setOpenModule(openModule === module.id ? null : module.id)}
                                                 className="flex justify-between w-full"
                                             >
                                                 <h3>{module.title}</h3>
@@ -150,8 +183,8 @@ export default function CourseOverview() {
                                                     {module.lessons.map((lesson) => (
                                                         <Link
                                                             key={lesson.id}
-                                                            to={`/student-course/${courses.id}/module/${module.id}/student-assessment/${lesson.id}`}
-                                                            className="block p-2 border mt-2 rounded"
+                                                            to={`/student-course/${course.id}/module/${module.id}/student-assessment/${lesson.id}`}
+                                                            className="block border mt-2 p-2 rounded"
                                                         >
                                                             {lesson.title}
                                                         </Link>
@@ -166,7 +199,7 @@ export default function CourseOverview() {
                             {/* PROGRESS TAB */}
                             {activeTab === "progress" && (
                                 <div>
-                                    <h3 className="text-xl font-semibold">Your Progress</h3>
+                                    <h3 className="font-semibold text-xl">Your Progress</h3>
 
                                     {progressData ? (
                                         <>

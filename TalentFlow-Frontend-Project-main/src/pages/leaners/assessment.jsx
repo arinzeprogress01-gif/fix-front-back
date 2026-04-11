@@ -1,38 +1,42 @@
-import { LuArrowLeft, LuBook, LuCheck, LuChevronLeft, LuChevronRight, LuCircleHelp, LuClipboard, LuDownload, LuFile, LuInfo, LuPlay } from "react-icons/lu";
+import {
+    LuArrowLeft, LuCheck
+} from "react-icons/lu";
 import SideBar from "./components/sidebar";
 import { courseType } from "./data/course";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-export default function Assessment(){
+export default function Assessment() {
+
     const { id, lessonId, moduleId } = useParams();
     const navigate = useNavigate();
-
-    const courses = courseType.find((item) => item.id === Number(id));
-    const module = courses.modulesView.find((mod) => mod.id === Number(moduleId))
-    const lesson = module?.lessons.find((lesson) => lesson.id === Number(lessonId));
 
     const [activeTab, setActiveTab] = useState("content");
     const [progressData, setProgressData] = useState(null);
 
     const token = localStorage.getItem("token");
 
-    const getInitials = (name) => {
-        return name.split(" ").map(word => word[0]).join("").toUpperCase();
+    // ✅ SAFE ACCESS
+    const courses = courseType.find((item) => item.id === Number(id));
+    const module = courses?.modulesView?.find((mod) => mod.id === Number(moduleId));
+    const lesson = module?.lessons?.find((l) => l.id === Number(lessonId));
+
+    // ✅ PREVENT CRASH
+    if (!courses || !module || !lesson) {
+        return <p className="p-5">Lesson not found</p>;
     }
 
+    // ✅ SAFE NAVIGATION LOGIC
     const currentIndex = module.lessons.findIndex((l) => l.id === Number(lessonId));
     const nextLesson = module.lessons[currentIndex + 1];
     const previousLesson = module.lessons[currentIndex - 1];
 
-    const objectives = [
-        'Understand the key concepts covered in this lesson',
-        'Apply learned principles to practical scenarios',
-        'Build foundational knowledge for advanced topics'
-    ];
+    const getInitials = (name) => {
+        return name?.split(" ").map(word => word[0]).join("").toUpperCase();
+    };
 
-    // ✅ FETCH PROGRESS (FROM YOUR BACKEND)
+    // ✅ FETCH PROGRESS
     useEffect(() => {
         const fetchProgress = async () => {
             try {
@@ -45,10 +49,10 @@ export default function Assessment(){
             }
         };
 
-        fetchProgress();
-    }, []);
+        if (token) fetchProgress();
+    }, [token]);
 
-    // ✅ UPDATE PROGRESS WHEN USER CLICKS NEXT
+    // ✅ UPDATE PROGRESS
     const updateProgress = async () => {
         try {
             await axios.put("/api/progress/update", {
@@ -61,84 +65,105 @@ export default function Assessment(){
         }
     };
 
-    // ✅ CHECK IF COURSE IS COMPLETED (REAL DATA)
+    // ✅ SAFE PROGRESS CHECK
     const courseProgress = progressData?.courses?.find(
         c => c.title === courses.title
     );
 
     const isCompleted = courseProgress?.completed;
 
-    return(
+    return (
         <>
             <SideBar title="Assessment">
-                <div className="w-full h-auto">
+                <div className="h-auto w-full">
 
                     {/* HEADER */}
-                    <div className="w-full p-5 bg-white">
-                        <div className="flex space-x-2 items-center mb-3">
-                            <Link to={`/student-course/${id}`} className="flex items-center space-x-1.5 text-[#8A9E95] font-semibold hover:text-[#1A7A4A]">
-                                <LuArrowLeft size={15}/>
+                    <div className="bg-white p-5 w-full">
+                        <div className="flex items-center mb-3 space-x-2">
+
+                            <Link
+                                to={`/student-course/${id}`}
+                                className="flex font-semibold hover:text-[#1A7A4A] items-center space-x-1.5 text-[#8A9E95]"
+                            >
+                                <LuArrowLeft size={15} />
                                 <p>{module.title}</p>
                                 <p>/</p>
                             </Link>
+
                             <p>{lesson.title}</p>
                         </div>
 
-                        <p className="w-20 text-xs font-medium text-[#1A7A4A] bg-[#E8F5EC] px-2 py-1 rounded mb-3 text-center">
+                        <p className="bg-[#E8F5EC] mb-3 px-2 py-1 rounded text-[#1A7A4A] text-center text-xs w-20">
                             {lesson.resource_type}
                         </p>
 
                         <div className="flex justify-between">
-                            <h3 className="text-xl md:text-3xl font-semibold">
+                            <h3 className="font-semibold md:text-3xl text-xl">
                                 {lesson.title}
                             </h3>
 
                             {/* ✅ REAL COMPLETION */}
                             {isCompleted && (
-                                <div className="flex items-center text-sm font-semibold text-[#1A7A4A] bg-[#E8F5EC] px-3 py-2 rounded-lg space-x-1">
-                                    <LuCheck className="w-5 h-5"/>
+                                <div className="bg-[#E8F5EC] flex font-semibold items-center px-3 py-2 rounded-lg space-x-1 text-[#1A7A4A] text-sm">
+                                    <LuCheck className="h-5 w-5" />
                                     <p>Completed</p>
                                 </div>
                             )}
                         </div>
 
-                        <p className="text-sm text-[#8A9E95] mt-1">
+                        <p className="mt-1 text-[#8A9E95] text-sm">
                             {lesson.duration}
                         </p>
                     </div>
 
                     {/* BODY */}
-                    <div className="w-full mt-5 p-5">
-                        <div className="bg-white rounded-xl border py-5 shadow-sm">
+                    <div className="mt-5 p-5 w-full">
+                        <div className="bg-white border py-5 rounded-xl shadow-sm">
 
                             {/* TABS */}
-                            <div className="flex border-b">
-                                <button onClick={() => setActiveTab("content")} className={`px-4 py-2 ${activeTab === "content" && "border-b text-green-700"}`}>Content</button>
-                                <button onClick={() => setActiveTab("assignment")} className={`px-4 py-2 ${activeTab === "assignment" && "border-b text-green-700"}`}>Assignment</button>
-                                <button onClick={() => setActiveTab("about")} className={`px-4 py-2 ${activeTab === "about" && "border-b text-green-700"}`}>About</button>
+                            <div className="border-b flex">
+                                <button
+                                    onClick={() => setActiveTab("content")}
+                                    className={`px-4 py-2 ${activeTab === "content" ? "border-b text-[#1A7A4A]" : ""}`}
+                                >
+                                    Content
+                                </button>
+
+                                <button
+                                    onClick={() => setActiveTab("assignment")}
+                                    className={`px-4 py-2 ${activeTab === "assignment" ? "border-b text-[#1A7A4A]" : ""}`}
+                                >
+                                    Assignment
+                                </button>
+
+                                <button
+                                    onClick={() => setActiveTab("about")}
+                                    className={`px-4 py-2 ${activeTab === "about" ? "border-b text-[#1A7A4A]" : ""}`}
+                                >
+                                    About
+                                </button>
                             </div>
 
-                            {/* CONTENT TAB */}
+                            {/* CONTENT */}
                             {activeTab === "content" && (
                                 <div className="p-5">
 
-                                    {/* KEEP YOUR EXISTING UI (UNCHANGED) */}
                                     {lesson.resource_type === "Note" && (
                                         <div>
-                                            <h3 className="text-2xl font-semibold mb-4">
-                                                {lesson.lessonContent.title}
+                                            <h3 className="font-semibold mb-4 text-2xl">
+                                                {lesson.lessonContent?.title}
                                             </h3>
-                                            <p>{lesson.lessonContent.introduction}</p>
+                                            <p>{lesson.lessonContent?.introduction}</p>
                                         </div>
                                     )}
 
                                     {/* NAVIGATION */}
-                                    <div className="mt-10 flex justify-between">
+                                    <div className="flex justify-between mt-10">
 
                                         <button
                                             onClick={() => {
                                                 if (previousLesson) {
-                                                    navigate(`/student-course/${id}/module/${module.id}/student-assessment/${previousLesson.id}`)
+                                                    navigate(`/student-course/${id}/module/${module.id}/student-assessment/${previousLesson.id}`);
                                                 }
                                             }}
                                         >
@@ -147,9 +172,9 @@ export default function Assessment(){
 
                                         <button
                                             onClick={async () => {
-                                                await updateProgress(); // 🔥 BACKEND CALL
+                                                await updateProgress();
                                                 if (nextLesson) {
-                                                    navigate(`/student-course/${id}/module/${module.id}/student-assessment/${nextLesson.id}`)
+                                                    navigate(`/student-course/${id}/module/${module.id}/student-assessment/${nextLesson.id}`);
                                                 }
                                             }}
                                         >
@@ -160,15 +185,15 @@ export default function Assessment(){
                                 </div>
                             )}
 
-                            {/* ASSIGNMENT TAB (UNCHANGED) */}
+                            {/* ASSIGNMENT */}
                             {activeTab === "assignment" && (
                                 <div className="p-5">
-                                    <h3>{lesson.assignment.title}</h3>
-                                    <p>{lesson.assignment.instructions}</p>
+                                    <h3>{lesson.assignment?.title}</h3>
+                                    <p>{lesson.assignment?.instructions}</p>
                                 </div>
                             )}
 
-                            {/* ABOUT TAB (UNCHANGED) */}
+                            {/* ABOUT */}
                             {activeTab === "about" && (
                                 <div className="p-5">
                                     <p>{module.sub_title}</p>
