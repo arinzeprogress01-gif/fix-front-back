@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-export default function PageUp(){
-    const {pathname} = useLocation();
+export default function PageUp() {
+    const { pathname } = useLocation();
+
     useEffect(() => {
-    window.scrollTo(0,0);
+        window.scrollTo(0, 0);
     }, [pathname]);
+
     return null;
 }
