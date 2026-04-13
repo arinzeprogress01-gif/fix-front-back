@@ -69,7 +69,7 @@ export default function SignUpPage() {
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 className='bg-white border border-[#D8E6DF] px-4 py-3 rounded-lg text-sm w-full'
-                placeholder='Adeola Ogunleye'
+                placeholder='Your Full Name'
                 required
               />
             </div>
