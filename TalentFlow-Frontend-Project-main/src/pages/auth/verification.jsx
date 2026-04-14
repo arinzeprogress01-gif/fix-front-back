@@ -119,7 +119,7 @@ export default function Verification(){
                 value={referenceNumber}
                 onChange={(e) => setReferenceNumber(e.target.value)}
                 className='border border-[#D8E6DF] px-4 py-3 rounded-lg text-sm w-full'
-                placeholder='LRN/TRN-2026-XXXX'
+                placeholder='LRN/TRN-2026-XXXXX'
                 required
               />
             </div>
