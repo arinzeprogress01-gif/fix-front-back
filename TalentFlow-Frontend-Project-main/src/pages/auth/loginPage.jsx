@@ -41,14 +41,19 @@ export default function LoginPage() {
       // ✅ SAVE USER
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ 🔥 UPDATED FLOW (LOGIN → VERIFICATION FIRST)
-      if (data.user.role === "learner" || data.user.role === "tutor") {
-        navigate("/verification");
-      } else if (data.user.role === "admin") {
+      // ✅ ROLE-BASED NAVIGATION (VERY IMPORTANT)
+      const role = data.user.role;
+
+      if (role === "learner") {
+        navigate("/learner-dashboard");
+      } else if (role === "tutor") {
+        navigate("/tutor-dashboard");
+      } else if (role === "admin") {
         navigate("/admin-dashboard");
       } else {
         navigate("/");
       }
+
 
     } catch (err) {
       console.error("Login error:", err);

@@ -51,16 +51,8 @@ export default function Verification() {
       // ✅ SAVE VERIFIED STATE
       localStorage.setItem("isVerified", "true");
 
-      // ✅ ROLE-BASED NAVIGATION (VERY IMPORTANT)
-      const role = res.data.role;
-
-      if (role === "learner") {
-        navigate("/learner-dashboard");
-      } else if (role === "tutor") {
-        navigate("/tutor-dashboard");
-      } else {
-        navigate("/"); // fallback
-      }
+      // ✅ NAVIGATE TO LOGIN PAGE
+      navigate("/sign-in");
 
     } catch (err) {
       console.log(err.response?.data || err.message);

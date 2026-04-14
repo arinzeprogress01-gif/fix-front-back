@@ -63,7 +63,7 @@ export default function SignUpPage() {
       alert("Account created successfully 🎉");
 
       // ✅ OPTIONAL: redirect to login
-      navigate("/sign-in");
+      navigate("/verification");
 
     } catch (err) {
       console.error("Registration error:", err);
