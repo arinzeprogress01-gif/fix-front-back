@@ -97,13 +97,13 @@ export default function Learners_Dashboard() {
         {
             image: image1,
             title: 'Introduction to Web Development',
-            author: 'Chukwuemeka Nwosu',
+            author: 'Mr Chukwuemeka Nwosu [WEB TEAM]',
             percent: 65
         },
         {
             image: image2,
             title: 'UI/UX Design Principles',
-            author: 'Amina Bello',
+            author: 'Mrs Amina Bello[UI/UX TEAM]',
             percent: 30
         },
     ]

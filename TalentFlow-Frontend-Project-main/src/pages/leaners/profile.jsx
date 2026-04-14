@@ -62,17 +62,17 @@ export default function LearnerProfile() {
     const learningHistory = [
         {
             title: 'Introduction to Web Development',
-            author: 'Chukwuemeka Nwosu',
+            author: 'Mr Chukwuemeka Nwosu [WEB TEAM]',
             percent: 65
         },
         {
             title: 'UI/UX Design Principles',
-            author: 'Amina Bello',
+            author: 'Mrs Amina Bello[UI/UX TEAM]',
             percent: 30
         },
         {
             title: 'Digital Marketing Fundamentals',
-            author: 'Blessing Okafor',
+            author: 'Mrs Blessing Okafor[MARKETING TEAM]',
             percent: 100
         },
     ];
