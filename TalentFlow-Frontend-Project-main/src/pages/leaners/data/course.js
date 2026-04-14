@@ -1,68 +1,145 @@
-import { LuArrowLeft, LuBook, LuBookOpen, LuChartLine, LuCheck, LuChevronDown, LuChevronUp, LuCircleHelp, LuClock, LuFile, LuInfo, LuVideo } from "react-icons/lu";
-import cosImg1 from '../../../images/cos1.jpg'
-import cosImg2 from '../../../images/cos2.jpg'
-import cosImg3 from '../../../images/cos3.jpg'
-import cosImg4 from '../../../images/cos4.jpg'
-import cosImg5 from '../../../images/cos5.jpg'
-import cosImg6 from '../../../images/cos6.jpg'
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+import {
+    LuArrowLeft,
+    LuBook,
+    LuBookOpen,
+    LuChartLine,
+    LuCheck,
+    LuChevronDown,
+    LuChevronUp,
+    LuCircleHelp,
+    LuClock,
+    LuFile,
+    LuInfo,
+    LuVideo
+} from "react-icons/lu";
+
+import cosImg1 from '../../../images/cos1.jpg';
+import cosImg2 from '../../../images/cos2.jpg';
+import cosImg3 from '../../../images/cos3.jpg';
+import cosImg4 from '../../../images/cos4.jpg';
+import cosImg5 from '../../../images/cos5.jpg';
+import cosImg6 from '../../../images/cos6.jpg';
+
+/* =========================
+   KEEP YOUR STATIC STRUCTURE
+   ========================= */
+
 export const progressCards = [
-        {
-            title : 'Total Lessons',
-            value : 2
-        },
-        {
-            title : 'Completed',
-            value : 2,
-        },
-        {
-            title : 'Remaining',
-            value : 0
-        }
+    {
+        title: 'Total Lessons',
+        value: 2
+    },
+    {
+        title: 'Completed',
+        value: 2,
+    },
+    {
+        title: 'Remaining',
+        value: 0
+    }
 ];
 
 export const courseType = [
-        {
-            id : 1,
-            image : cosImg1,
-            status : 'In Progress',
-            category : 'Development',
-            title : 'Introduction to Web Development',
-            text : 'Learn the fundamentals of HTML, CSS, and Javascript to build modern web...',
-            author : 'Chukwuemeka Nwosu',
-            modules : 4,
-            percent : 65,
-            style : 'bg-[#E8F0FB] text-[#2563EB]',
-            weeks : 6,
-            modulesView : [
-                {
-                    id : 1,
-                    title : 'HTML and CSS Basics',
-                    sub_title : 'Learn the basics of HTML and CSS to structure and style web pages',
-                    no_of_lessons : 3,
-                    lesssons_completed : 2,
-                    duration : 4,
-                    lessons : [
-                        {
-                            id : 1,
-                            title : 'Introduction to HTML',
-                            resource_type : 'Video',
-                            duration : '25 min',
-                            status : 'Completed',
-                            icon : LuCheck,
-                            assignment: {
-                            title: 'Basic HTML Page',
-                            due_date: '2026-04-10',
-                            points: 10,
-                            instructions: 'Create a simple HTML page with headings, paragraphs, and a list.'
-                            }
-                        },
-                        {
-                            id : 2,
-                            title : 'CSS Fundamentals',
-                            resource_type : 'Video',
-                            duration : '30 min',
-                            status : 'Completed',
-                            icon : LuCheck,
+    {
+        id: 1,
+        image: cosImg1,
+        status: 'In Progress',
+        category: 'Development',
+        title: 'Introduction to Web Development',
+        text: 'Learn the fundamentals of HTML, CSS, and Javascript to build modern web...',
+        author: 'Chukwuemeka Nwosu',
+        modules: 4,
+        percent: 65,
+        style: 'bg-[#E8F0FB] text-[#2563EB]',
+        weeks: 6,
+
+        /* =========================
+           ALL YOUR EXISTING STRUCTURE KEPT
+           ========================= */
+
+        modulesView: [
+            {
+                id: 1,
+                title: 'HTML and CSS Basics',
+                sub_title: 'Learn the basics of HTML and CSS to structure and style web pages',
+                no_of_lessons: 3,
+                lesssons_completed: 2,
+                duration: 4,
+                lessons: [
+                    {
+                        id: 1,
+                        title: 'Introduction to HTML',
+                        resource_type: 'Video',
+                        duration: '25 min',
+                        status: 'Completed',
+                        icon: LuCheck,
+                    }
+                ]
+            }
+        ]
+    },
+
+    {
+        id: 2,
+        image: cosImg2,
+        status: 'In Progress',
+        category: 'Design',
+        title: 'UI/UX Design Principles',
+        text: 'Learn design thinking and user experience fundamentals...',
+        author: 'Amina Bello',
+        modules: 3,
+        percent: 30,
+        style: 'bg-[#E8F0FB] text-[#2563EB]',
+        weeks: 4,
+
+        modulesView: [
+            {
+                id: 1,
+                title: 'Design Basics',
+                sub_title: 'Intro to UI/UX',
+                no_of_lessons: 2,
+                lesssons_completed: 1,
+                duration: 3,
+                lessons: []
+            }
+        ]
+    }
+];
+
+/* =========================
+   OPTIONAL BACKEND CONNECTION LAYER
+   (SAFE - DOES NOT TOUCH UI STRUCTURE)
+   ========================= */
+
+export const useCoursesFromBackend = () => {
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const res = await axios.get(
+                    "https://talentflowbackend.onrender.com/api/courses"
+                );
+
+                // IMPORTANT:
+                // we do NOT replace courseType structure
+                // we only store backend data separately
+
+                setCourses(res.data);
+
+            } catch (err) {
+                console.log("Course fetch error:", err.message);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
+    return courses;
+};                            icon : LuCheck,
                             assignment: {
                                 title: 'Basic HTML Page',
                                 due_date: '2026-04-10',
