@@ -3,7 +3,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
 export default function SignUpPage() {
-
+  const [successMsg, setSuccessMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
   const navigate = useNavigate();
 
   // STATE
@@ -19,9 +20,10 @@ export default function SignUpPage() {
   const handleRegister = async (e) => {
     e.preventDefault();
 
-    // ✅ FRONTEND VALIDATION (IMPORTANT)
+    // ✅ FRONTEND VALIDATION
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setErrorMsg("Passwords do not match");
+      setSuccessMsg("");
       return;
     }
 
@@ -53,21 +55,26 @@ export default function SignUpPage() {
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "Registration failed");
+        setErrorMsg(data.message || "Registration failed");
+        setSuccessMsg("")
         setLoading(false);
         return;
       }
 
       console.log("Registration success:", data);
 
-      alert("Account created successfully 🎉");
+      setSuccessMsg("Account created successfully 🎉");
+      setErrorMsg("");
 
-      // ✅ OPTIONAL: redirect to login
-      navigate("/verification");
+      // ✅ FIX: redirect to LOGIN!
+      setTimeout(() => {
+        navigate("/sign-in");
+      }, 2000);
 
     } catch (err) {
       console.error("Registration error:", err);
-      alert("Something went wrong");
+      setErrorMsg("Something went wrong. Try again");
+      setSuccessMsg("")
     } finally {
       setLoading(false);
     }
@@ -89,6 +96,18 @@ export default function SignUpPage() {
           <p className='text-[#4A5C52]'>
             Create your account and start learning
           </p>
+
+          {successMsg && (
+            <div className='bg-green-100 border border-green-400 mb-4 mt-5 px-4 py-3 rounded-lg text-green-700 w-full'>
+              {successMsg}
+            </div>
+          )}
+
+          {errorMsg && (
+            <div className='bg-red-100 border border-red-400 mb-4 mt-5 px-4 py-3 rounded-lg text-red-700 w-full'>
+              {errorMsg}
+            </div>
+          )}
 
           <form
             onSubmit={handleRegister}
@@ -177,7 +196,7 @@ export default function SignUpPage() {
             <button
               type='submit'
               disabled={loading}
-              className='bg-[#1A7A4A] disabled:opacity-50 mt-5 py-3 rounded-lg text-white w-full'
+              className='bg-[#1A7A4A] cursor-pointer disabled:opacity-50 mt-5 py-3 rounded-lg text-white w-full'
             >
               {loading ? "Creating Account..." : "Create Account"}
             </button>
