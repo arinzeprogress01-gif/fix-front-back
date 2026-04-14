@@ -38,14 +38,12 @@ export default function LoginPage() {
       // ✅ SAVE TOKEN
       localStorage.setItem("token", data.token);
 
-      // ✅ SAVE USER (optional but useful)
+      // ✅ SAVE USER
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // ✅ ROLE-BASED REDIRECT
-      if (data.user.role === "learner") {
-        navigate("/learner-dashboard");
-      } else if (data.user.role === "tutor") {
-        navigate("/tutor-dashboard");
+      // ✅ 🔥 UPDATED FLOW (LOGIN → VERIFICATION FIRST)
+      if (data.user.role === "learner" || data.user.role === "tutor") {
+        navigate("/verification");
       } else if (data.user.role === "admin") {
         navigate("/admin-dashboard");
       } else {
@@ -60,14 +58,14 @@ export default function LoginPage() {
 
   return (
     <>
-      <div className="w-full h-screen lg:p-10 flex flex-col items-center justify-center">
-        <div className="w-[95%] md:w-[75%] lg:w-[40%] p-5 flex flex-col items-center">
+      <div className="flex flex-col h-screen items-center justify-center lg:p-10 w-full">
+        <div className="flex flex-col items-center lg:w-[40%] md:w-[75%] p-5 w-[95%]">
 
           <Link to="/">
-            <img src={logoImg} className='w-60 h-20 object-cover' />
+            <img src={logoImg} className='h-20 object-cover w-60' />
           </Link>
 
-          <h3 className='text-2xl md:text-3xl font-semibold text-[#1A1A1A] mb-2'>
+          <h3 className='font-semibold mb-2 md:text-3xl text-2xl text-[#1A1A1A]'>
             Welcome to TalentFlow
           </h3>
 
@@ -75,57 +73,51 @@ export default function LoginPage() {
             Sign in to continue your learning journey
           </p>
 
-          {/* ✅ CONNECTED FORM */}
-          <form onSubmit={handleLogin} className='w-full shadow-md p-2 md:p-5 mt-5 bg-white rounded-xl border'>
+          <form onSubmit={handleLogin} className='bg-white border md:p-5 mt-5 p-2 rounded-xl shadow-md w-full'>
 
-            {/* EMAIL */}
-            <div className='p-2 flex flex-col'>
-              <label className='text-sm font-medium mb-2'>Email Address</label>
+            <div className='flex flex-col p-2'>
+              <label className='font-medium mb-2 text-sm'>Email Address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className='px-4 py-3 border rounded-lg text-sm'
+                className='border px-4 py-3 rounded-lg text-sm'
                 placeholder='you@example.com'
                 required
               />
             </div>
 
-            {/* PASSWORD */}
-            <div className='p-2 flex flex-col'>
-              <label className='text-sm font-medium mb-2'>Password</label>
+            <div className='flex flex-col p-2'>
+              <label className='font-medium mb-2 text-sm'>Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className='px-4 py-3 border rounded-lg text-sm'
+                className='border px-4 py-3 rounded-lg text-sm'
                 placeholder='********'
                 required
               />
             </div>
 
-            {/* REMEMBER */}
-            <div className='p-2 flex justify-between items-center'>
+            <div className='flex items-center justify-between p-2'>
               <div className='flex items-center'>
-                <input type="checkbox" className='w-4 h-4' />
+                <input type="checkbox" className='h-4 w-4' />
                 <span className='ml-2 text-sm'>Remember Me</span>
               </div>
 
-              <Link className='text-sm text-[#1A7A4A]'>
+              <Link className='text-[#1A7A4A] text-sm'>
                 Forgot Password?
               </Link>
             </div>
 
-            {/* BUTTON */}
             <button
               type='submit'
-              className='mt-5 w-full bg-[#1A7A4A] text-white py-3 rounded-lg cursor-pointer'
+              className='bg-[#1A7A4A] cursor-pointer mt-5 py-3 rounded-lg text-white w-full'
             >
               Sign In
             </button>
 
-            {/* LINK */}
-            <p className='mt-5 flex justify-center text-sm'>
+            <p className='flex justify-center mt-5 text-sm'>
               Don't have an account
               <Link to="/sign-up" className='ml-2 text-[#1A7A4A]'>
                 Sign Up
