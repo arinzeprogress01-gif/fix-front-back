@@ -1,170 +1,207 @@
-import { useState, useEffect } from "react";
+import { useParams, Link } from "react-router-dom";
 import SideBar from "./components/sidebar";
-import { FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import {
+    LuArrowLeft, LuBookOpen, LuChartLine, LuChartNoAxesColumn,
+    LuChevronDown, LuChevronUp, LuClock
+} from "react-icons/lu";
+import { useState, useEffect } from "react"; // ✅ FIXED
+import { courseType } from "./data/course";
+import axios from "axios";
 
-export default function Courses() {
+export default function CourseOverview() {
 
-    const categories = ['All', 'Development', 'Design', 'Data Science', 'Marketing', 'Business'];
+    const { id } = useParams();
 
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    const [courseType, setCourseType] = useState([]);
-    const [searchTerm, setSearchTerm] = useState(""); // ✅ ADDED ONLY
+    // ✅ REQUIRED STATES (RESTORED)
+    const [activeTab, setActiveTab] = useState("overview");
+    const [openModule, setOpenModule] = useState(null);
+    const [progressData, setProgressData] = useState(null);
+    const [backendCourse, setBackendCourse] = useState(null);
 
+    const token = localStorage.getItem("token");
+
+    // ✅ DUMMY COURSE (DO NOT TOUCH STRUCTURE)
+    const dummycourses = courseType.find((item) => item.id === Number(id));
+
+    // 🔥 FETCH BACKEND COURSE (ONLY DATA, NO STRUCTURE CHANGE)
     useEffect(() => {
-        const fetchCourses = async () => {
+        const fetchCourse = async () => {
             try {
                 const res = await fetch("https://talentflowbackend.onrender.com/api/courses");
                 const data = await res.json();
 
-                const formatted = data.map((course, index) => ({
-                    // ✅ KEEP YOUR ORIGINAL INDEX SYSTEM (DO NOT BREAK OVERVIEW)
-                    id: index + 1,
-
-                    title: course.title,
-                    text: course.description,
-                    category: course.category || "Development",
-                    author: course.instructor || "Admin",
-                    modules: course.modules?.length || 0,
-                    percent: 0,
-                    image: course.image || "https://placehold.co/600x400",
-                    status: "New",
-                    style: "bg-[#E8F5EC] text-[#1A7A4A]"
-                }));
-
-                setCourseType(formatted);
+                const found = data?.[Number(id) - 1]; // keep your index logic
+                setBackendCourse(found || null);
 
             } catch (err) {
-                console.error("Error fetching courses:", err);
+                console.error("Error fetching course:", err);
             }
         };
 
-        fetchCourses();
-    }, []);
+        fetchCourse();
+    }, [id]);
 
-    // ✅ ONLY EXTENDED YOUR EXISTING FILTER (NO REWRITE)
-    const filteredCategory =
-        selectedCategory === "All"
-            ? courseType
-            : courseType.filter(type => type.category === selectedCategory);
+    // 🔥 FETCH PROGRESS
+    useEffect(() => {
+        const fetchProgress = async () => {
+            try {
+                const res = await axios.get(
+                    "https://talentflowbackend.onrender.com/api/progress",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
 
-    // ✅ ADD SEARCH ON TOP OF YOUR FILTER
-    const finalCourses = filteredCategory.filter(course =>
-        course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        course.text.toLowerCase().includes(searchTerm.toLowerCase())
+                setProgressData(res.data.data);
+
+            } catch (err) {
+                console.error(err.response?.data || err.message);
+            }
+        };
+
+        if (token) fetchProgress();
+    }, [token]);
+
+    // ❌ STOP IF NO DUMMY (IMPORTANT)
+    if (!dummycourses) return <p>Courses not available</p>;
+
+    // ✅ SAFE MERGE (THIS IS THE ONLY PLACE WE TOUCH DATA)
+    const courses = {
+        ...dummycourses,
+        title: backendCourse?.title || dummycourses.title,
+        image: backendCourse?.image || dummycourses.image,
+        author: backendCourse?.instructor || dummycourses.author,
+        category: backendCourse?.category || dummycourses.category,
+        text: backendCourse?.description || dummycourses.text,
+        modulesView: dummycourses.modulesView // 🔥 KEEP STRUCTURE
+    };
+
+    // 🔥 PROGRESS MATCH
+    const courseProgress =
+        progressData?.courses?.find(c => c.title === courses.title);
+
+    const percent = courseProgress?.progress || 0;
+
+    // 🔥 CALCULATIONS (NOW SAFE)
+    const totalLessons = courses.modulesView.reduce(
+        (sum, module) => sum + (module.lessons?.length || 0), 0
     );
+
+    const completedLessons = courses.modulesView.reduce(
+        (sum, module) => sum + (module.lesssons_completed || 0), 0
+    );
+
+    const remaining_course = totalLessons - completedLessons;
 
     return (
         <>
             <SideBar title="Courses">
-                <div className="h-auto p-5 w-full">
+                <div className="h-auto w-full">
 
-                    <h3 className="font-semibold mt-3 text-2xl">Course Catalog</h3>
-                    <p className="mt-2 text-[#8A9E95] text-sm">
-                        Explore and enroll in courses to expand your skills
-                    </p>
+                    {/* HEADER */}
+                    <div className="h-80 relative w-full">
+                        <img src={courses.image} className="h-full object-cover w-full" />
 
-                    <div className="flex flex-col lg:flex-row lg:justify-between lg:space-y-0 mt-3 space-y-3 w-full">
+                        <div className="absolute bg-gradient-to-t from-black/70 h-full left-0 p-5 to-transparent top-0 w-full">
 
-                        <div className="bg-white border border-[#D8D6EF] flex h-11 items-center lg:w-[75%] px-3 rounded-lg space-x-2 w-full">
-                            <FaSearch className="text-[#8F9E95]" />
-                            <input
-                                type="text"
-                                placeholder="Search Courses..."
-                                value={searchTerm} // ✅ ADDED
-                                onChange={(e) => setSearchTerm(e.target.value)} // ✅ ADDED
-                                className="border-none h-full outline-none text-[#8A9E95] text-[13px] w-full"
-                            />
-                        </div>
+                            <Link to="/student-course" className="flex font-semibold items-center text-white">
+                                <LuArrowLeft size={15} />
+                                <p className="ml-1">Back to Courses</p>
+                            </Link>
 
-                        <select
-                            value={selectedCategory}
-                            onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="bg-white border border-[#D8D6EF] cursor-pointer h-11 lg:h-auto lg:w-[23%] outline-none px-3 rounded-lg text-[13px] w-full"
-                        >
-                            {categories.map((data, index) => (
-                                <option key={index} value={data}>{data}</option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {/* CATEGORY BUTTONS */}
-                    <div className="gap-3 grid grid-cols-2 lg:grid-cols-6 lg:w-[75%] md:grid-cols-3 mt-5">
-                        {categories.map((data, index) => (
-                            <button
-                                key={index}
-                                onClick={() => setSelectedCategory(data)}
-                                className={`py-2 rounded-md font-semibold text-sm cursor-pointer transition-all
-                                    ${selectedCategory === data
-                                        ? "bg-[#1A7A4A] text-white"
-                                        : "bg-white border border-[#D8E6DF] text-[#4A5C52] hover:border-[#1A7A4A]"}`}
-                            >
-                                {data}
-                            </button>
-                        ))}
-                    </div>
-
-                    {/* COURSE LIST */}
-                    <div className="gap-4 grid grid-cols-1 md:grid-cols-2 mt-5 py-5 w-full">
-
-                        {finalCourses.map((data) => ( // ✅ ONLY CHANGE HERE
-                            <div
-                                key={data.id}
-                                className="border border-[#D8D6EF] flex flex-col group hover:border-[#1A7A4A] overflow-hidden rounded-xl"
-                            >
-                                <img
-                                    src={data.image}
-                                    alt="Course"
-                                    className="duration-300 group-hover:scale-105 h-48 object-cover transition w-full"
-                                />
-
-                                <p className={`absolute top-2 right-2 text-[11px] px-2.5 rounded-full py-0.5 font-semibold ${data.style}`}>
-                                    {data.status}
+                            <div className="lg:mt-20 mt-10 text-white">
+                                <p className="bg-[#1A7A4A] px-3 py-1 rounded-full text-xs w-fit">
+                                    {courses.category}
                                 </p>
 
-                                <div className="bg-white flex flex-col p-3.5 rounded-b-xl space-y-1.5">
+                                <h1 className="font-semibold mt-2 text-3xl">
+                                    {courses.title}
+                                </h1>
 
-                                    <p className="bg-[#E8F5EC] font-medium px-2 py-1 rounded-md text-[#1A7A4A] text-xs w-fit">
-                                        {data.category}
-                                    </p>
+                                <p className="text-white/80">by {courses.author}</p>
 
-                                    <h3 className="font-semibold group-hover:text-[#1A7A4A] text-md">
-                                        {data.title}
-                                    </h3>
-
-                                    <p className="text-[#8A9E95] text-sm">
-                                        {data.text}
-                                    </p>
-
-                                    <div className="flex justify-between text-[#8A9E95] text-sm">
-                                        <p>by {data.author}</p>
-                                        <p>{data.modules} modules</p>
-                                    </div>
-
-                                    <div className="mt-4 w-full">
-                                        <div className="bg-[#D8E6DF] h-1.5 rounded-md w-full">
-                                            <div
-                                                className="bg-[#1A7A4A] h-full rounded-md"
-                                                style={{ width: `${data.percent}%` }}
-                                            ></div>
-                                        </div>
-                                    </div>
-
-                                    <Link to={`/student-course/${data.id}`}>
-                                        <button
-                                            className={`w-full font-semibold mt-2 py-2.5 text-sm rounded-lg transition-all
-                                                ${data.percent === 0
-                                                    ? "text-[#1A7A4A] border border-[#1A7A4A] hover:bg-[#156239] hover:text-white"
-                                                    : "bg-[#1A7A4A] text-white hover:bg-[#156239]"}`}
-                                        >
-                                            {data.percent === 0 ? "Enroll Now" : "Continue Learning"}
-                                        </button>
-                                    </Link>
-
+                                <div className="flex gap-4 mt-2 text-sm">
+                                    <p>{courses.weeks} weeks</p>
+                                    <p>{courses.modules} modules</p>
+                                    <p>{percent}% Complete</p>
                                 </div>
                             </div>
-                        ))}
 
+                        </div>
+                    </div>
+
+                    {/* BODY (UNCHANGED UI) */}
+                    <div className="p-5">
+                        <div className="bg-white border p-5 rounded-xl">
+
+                            {/* TABS */}
+                            <div className="border-b flex gap-4 mb-4">
+                                <button onClick={() => setActiveTab("overview")}>Overview</button>
+                                <button onClick={() => setActiveTab("content")}>Content</button>
+                                <button onClick={() => setActiveTab("progress")}>Progress</button>
+                            </div>
+
+                            {/* OVERVIEW */}
+                            {activeTab === "overview" && (
+                                <div>
+                                    <h3 className="font-semibold mb-3 text-xl">
+                                        About this Course
+                                    </h3>
+
+                                    <p>{courses.text}</p>
+                                </div>
+                            )}
+
+                            {/* CONTENT */}
+                            {activeTab === "content" && (
+                                <div>
+                                    {courses.modulesView.map((module) => (
+                                        <div key={module.id} className="border mb-3 p-3 rounded">
+
+                                            <button
+                                                onClick={() =>
+                                                    setOpenModule(openModule === module.id ? null : module.id)
+                                                }
+                                                className="flex justify-between w-full"
+                                            >
+                                                <h3>{module.title}</h3>
+                                                {openModule === module.id ? <LuChevronUp /> : <LuChevronDown />}
+                                            </button>
+
+                                            {openModule === module.id && (
+                                                <div className="mt-3">
+                                                    {module.lessons.map((lesson) => (
+                                                        <Link
+                                                            key={lesson.id}
+                                                            to={`/student-course/${courses.id}/module/${module.id}/student-assessment/${lesson.id}`}
+                                                            className="block border mt-2 p-2 rounded"
+                                                        >
+                                                            {lesson.title}
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                            )}
+
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* PROGRESS */}
+                            {activeTab === "progress" && (
+                                <div>
+                                    <h3 className="font-semibold text-xl">Your Progress</h3>
+
+                                    <p>Total Lessons: {totalLessons}</p>
+                                    <p>Completed: {completedLessons}</p>
+                                    <p>Remaining: {remaining_course}</p>
+                                    <p>Progress: {percent}%</p>
+                                </div>
+                            )}
+
+                        </div>
                     </div>
 
                 </div>
