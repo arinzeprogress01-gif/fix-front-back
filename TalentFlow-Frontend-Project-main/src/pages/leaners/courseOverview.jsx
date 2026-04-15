@@ -4,33 +4,31 @@ import {
     LuArrowLeft, LuBookOpen, LuChartLine, LuChartNoAxesColumn,
     LuChevronDown, LuChevronUp, LuClock
 } from "react-icons/lu";
-import { useState, useEffect } from "react"; // ✅ FIXED
+import { useState, useEffect } from "react";
 import { courseType } from "./data/course";
 import axios from "axios";
 
 export default function CourseOverview() {
 
-    const { id } = useParams();
-
-    // ✅ REQUIRED STATES (RESTORED)
     const [activeTab, setActiveTab] = useState("overview");
     const [openModule, setOpenModule] = useState(null);
     const [progressData, setProgressData] = useState(null);
     const [backendCourse, setBackendCourse] = useState(null);
 
+    const { id } = useParams();
     const token = localStorage.getItem("token");
 
-    // ✅ DUMMY COURSE (DO NOT TOUCH STRUCTURE)
+    // ✅ KEEP DUMMY
     const dummycourses = courseType.find((item) => item.id === Number(id));
 
-    // 🔥 FETCH BACKEND COURSE (ONLY DATA, NO STRUCTURE CHANGE)
+    // 🔥 FETCH BACKEND COURSE
     useEffect(() => {
         const fetchCourse = async () => {
             try {
                 const res = await fetch("https://talentflowbackend.onrender.com/api/courses");
                 const data = await res.json();
 
-                const found = data?.[Number(id) - 1]; // keep your index logic
+                const found = data?.[Number(id) - 1]; // ✅ KEEP INDEX SYSTEM
                 setBackendCourse(found || null);
 
             } catch (err) {
@@ -48,9 +46,7 @@ export default function CourseOverview() {
                 const res = await axios.get(
                     "https://talentflowbackend.onrender.com/api/progress",
                     {
-                        headers: {
-                            Authorization: `Bearer ${token}`
-                        }
+                        headers: { Authorization: `Bearer ${token}` }
                     }
                 );
 
@@ -64,10 +60,9 @@ export default function CourseOverview() {
         if (token) fetchProgress();
     }, [token]);
 
-    // ❌ STOP IF NO DUMMY (IMPORTANT)
     if (!dummycourses) return <p>Courses not available</p>;
 
-    // ✅ SAFE MERGE (THIS IS THE ONLY PLACE WE TOUCH DATA)
+    // ✅ MERGE (ONLY SAFE FIELDS)
     const courses = {
         ...dummycourses,
         title: backendCourse?.title || dummycourses.title,
@@ -75,7 +70,7 @@ export default function CourseOverview() {
         author: backendCourse?.instructor || dummycourses.author,
         category: backendCourse?.category || dummycourses.category,
         text: backendCourse?.description || dummycourses.text,
-        modulesView: dummycourses.modulesView // 🔥 KEEP STRUCTURE
+        modulesView: dummycourses.modulesView // 🔥 DO NOT TOUCH
     };
 
     // 🔥 PROGRESS MATCH
@@ -84,7 +79,7 @@ export default function CourseOverview() {
 
     const percent = courseProgress?.progress || 0;
 
-    // 🔥 CALCULATIONS (NOW SAFE)
+    // ✅ SAFE CALCULATIONS
     const totalLessons = courses.modulesView.reduce(
         (sum, module) => sum + (module.lessons?.length || 0), 0
     );
