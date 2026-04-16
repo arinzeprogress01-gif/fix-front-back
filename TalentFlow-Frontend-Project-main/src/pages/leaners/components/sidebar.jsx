@@ -18,18 +18,21 @@ import { useState } from "react";
 export default function SideBar({ children, title, userData }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    // ✅ SAFE INITIALS (prevents "U" bug caused by undefined userData)
     const initials = userData?.fullName
         ? userData.fullName
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
         : userData?.referenceNumber
             ? userData.referenceNumber
-              .split(" ")
-              .map((n) => n[0])
-              .join("")
-              .toUpperCase()
-        : "U";
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
+            : "U";
 
-    // ✅ FIX: unified reference number (backend now sends referenceNumber)
+    
     const referenceNumber =
         userData?.referenceNumber ||
         (userData?.role === "learner"
