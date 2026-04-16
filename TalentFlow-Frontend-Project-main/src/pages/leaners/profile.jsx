@@ -52,9 +52,9 @@ export default function LearnerProfile() {
     // ✅ FIX: SAFE DATE HANDLING (THIS SOLVES N/A ISSUE)
     const joinedDate =
         user?.joinedAt ||
-        user?.joined_at ||
-        profileData?.createdAt ||
-        profileData?.created_at;
+        user?.createdAt ||
+        profileData?. joinedAt ||
+        profileData?.createdAt;
 
     const achievements = [
         {
