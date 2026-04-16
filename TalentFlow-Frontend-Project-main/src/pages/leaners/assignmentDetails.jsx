@@ -53,45 +53,45 @@ export default function AssignmentOverview(){
     return(
         <>
             <SideBar title="Assignments">
-                <div className="w-full h-auto p-5 lg:p-10">
-                    <Link to="/assignment" className="w-full py-3 flex space-x-1 text-[#4A5C52] hover:text-[#1A7A4A] items-center">
+                <div className="h-auto lg:p-10 p-5 w-full">
+                    <Link to="/assignment" className="flex hover:text-[#1A7A4A] items-center py-3 space-x-1 text-[#4A5C52] w-full">
                         <LuArrowLeft  className="mt-0.5"/>
                         <p className="font-semibold">Back to Assignments</p>
                     </Link>
-                    <div className="w-full px-5 py-7 border-1 mt-5 rounded-xl bg-white border-[#D8D6EF] flex flex-col space-y-2">
+                    <div className="bg-white border-1 border-[#D8D6EF] flex flex-col mt-5 px-5 py-7 rounded-xl space-y-2 w-full">
                         <p className="text-[#8A9E95] text-sm">{assignment.sub_title}</p>
-                        <h3 className="text-[#1A1A1A] text-2xl font-semibold ">{assignment.title}</h3>
-                        <p className="text-[#4A5C52] mt-1.5 text-sm">{assignment.text}</p>
-                        <div className="flex space-x-3 items-center text-[#8A9E95] text-sm">
+                        <h3 className="font-semibold text-2xl text-[#1A1A1A]">{assignment.title}</h3>
+                        <p className="mt-1.5 text-[#4A5C52] text-sm">{assignment.text}</p>
+                        <div className="flex items-center space-x-3 text-[#8A9E95] text-sm">
                         <p>Due:{assignment.due}</p>
-                        <div className="w-1 h-1 border mt-1 rounded-full bg-[#8A9E95]"></div>
+                        <div className="bg-[#8A9E95] border h-1 mt-1 rounded-full w-1"></div>
                         <p>On time</p>
                         </div>
                     </div>
-                    <form action="" className="w-full py-5 flex flex-col mt-5 space-y-4">
-                        <div className="w-full p-4 border-1 bg-white rounded-lg border-[#D8D6EF]">
-                            <p className="text-[13px] text-[#1A1A1A] font-semibold">Your Submission</p>
-                            <textarea name="" id="" placeholder="Describe your work, share links, or provide context for your submission" className="text-sm w-full h-50 border-1 border-[#D8D6EF] mt-3 rounded-lg outline-[#1A7A4A] p-2.5"></textarea>
+                    <form action="" className="flex flex-col mt-5 py-5 space-y-4 w-full">
+                        <div className="bg-white border-1 border-[#D8D6EF] p-4 rounded-lg w-full">
+                            <p className="font-semibold text-[#1A1A1A] text-[13px]">Your Submission</p>
+                            <textarea name="" id="" placeholder="Describe your work, share links, or provide context for your submission" className="border-1 border-[#D8D6EF] h-50 mt-3 outline-[#1A7A4A] p-2.5 rounded-lg text-sm w-full"></textarea>
                         </div>
-                        <div className="w-full p-4 border-1 bg-white rounded-lg border-[#D8D6EF]">
-                            <p className="text-[13px] text-[#1A1A1A] font-semibold">Attach Files (Optional)</p>
-                            <input type="file" className="w-full h-35 border-1 border-[#D8D6EF] mt-3 rounded-lg outline-[#1A7A4A] p-2.5 text-center">
+                        <div className="bg-white border-1 border-[#D8D6EF] p-4 rounded-lg w-full">
+                            <p className="font-semibold text-[#1A1A1A] text-[13px]">Attach Files (Optional)</p>
+                            <input type="file" className="border-1 border-[#D8D6EF] h-35 mt-3 outline-[#1A7A4A] p-2.5 rounded-lg text-center w-full">
                             </input>
                         </div>
-                        <div className="w-full p-4 border-1 bg-white rounded-lg border-[#D8D6EF] space-y-2">
-                            <p className="text-[13px] text-[#1A1A1A] font-semibold">Add Links (Optional)</p>
-                            <p className="text-xs text-[#8A9E95]">Share links to Goggle Docs, Github repositories, or other online resources</p>
-                            <div className="flex w-full h-10 border-1 border-[#D8D6EF] mt-3 rounded-lg outline-[#1A7A4A] px-3 items-center space-x-2 hover:outline-2 hover:outline-[#1A7A4A]">
+                        <div className="bg-white border-1 border-[#D8D6EF] p-4 rounded-lg space-y-2 w-full">
+                            <p className="font-semibold text-[#1A1A1A] text-[13px]">Add Links (Optional)</p>
+                            <p className="text-[#8A9E95] text-xs">Share links to Goggle Docs, Github repositories, or other online resources</p>
+                            <div className="border-1 border-[#D8D6EF] flex h-10 hover:outline-2 hover:outline-[#1A7A4A] items-center mt-3 outline-[#1A7A4A] px-3 rounded-lg space-x-2 w-full">
                                 <LuLink />
-                                <input type="link" placeholder="https://example.com/your-work" className="w-full h-full border-none outline-none text-sm" />
+                                <input type="link" placeholder="https://example.com/your-work" className="border-none h-full outline-none text-sm w-full" />
                             </div>
-                            <a href="#" className="text-[#1A7A4A] font-semibold text-sm"> + Add another link</a>
+                            <a href="#" className="font-semibold text-[#1A7A4A] text-sm"> + Add another link</a>
                         </div>
-                        <div className="py-2 w-full space-x-5 flex">
-                            <button className="border-2 w-1/2 h-12 rounded-lg cursor-pointer border-[#D8E6DF] text-[#4A5C52] font-semibold hover:border-[#B2CFC0] transition-all">
+                        <div className="flex py-2 space-x-5 w-full">
+                            <button className="border-2 border-[#D8E6DF] cursor-pointer font-semibold h-12 hover:border-[#B2CFC0] rounded-lg text-[#4A5C52] transition-all w-1/2">
                                 Cancel
                             </button>
-                            <button className="w-1/2 h-12 rounded-lg cursor-pointer text-white font-semibold bg-[#1A7A4A] transition-all hover:bg-[#156239]">
+                            <button className="bg-[#1A7A4A] cursor-pointer font-semibold h-12 hover:bg-[#156239] rounded-lg text-white transition-all w-1/2">
                                 Submit Assignment
                             </button>
                         </div>

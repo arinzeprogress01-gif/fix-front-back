@@ -80,7 +80,7 @@ export default function LearnerProfile() {
 
     return (
         <>
-            <SideBar title="Profile" userData={user}>
+            <SideBar title="Profile">
                 <div className="h-auto px-7 py-5 w-full">
 
                     {/* PROFILE CARD */}

@@ -74,7 +74,7 @@ export default function Assessment() {
 
     return (
         <>
-            <SideBar title="Assessment">
+            <SideBar title="Assessment ">
                 <div className="h-auto w-full">
 
                     {/* HEADER */}
