@@ -130,28 +130,28 @@ export default function LearnerProfile() {
 
                         <div className="bg-white border-1 border-[#D8D6EF] flex flex-col p-5 rounded-xl">
                             <h3 className="font-semibold text-2xl">
-                                {stats.enrolledCourses || 0}
+                                {stats.enrolledCourses ?? courses.length ?? 0}
                             </h3>
                             <p className="text-[#8A9E95] text-sm">Enrolled Courses</p>
                         </div>
 
                         <div className="bg-white border-1 border-[#D8D6EF] flex flex-col p-5 rounded-xl">
                             <h3 className="font-semibold text-2xl">
-                                {stats.completedCourses || 0}
+                                {stats.completedCourses ?? courses.filter(c => c.progress === 100).length ?? 0}
                             </h3>
                             <p className="text-[#8A9E95] text-sm">Completed</p>
                         </div>
 
                         <div className="bg-white border-1 border-[#D8D6EF] flex flex-col p-5 rounded-xl">
                             <h3 className="font-semibold text-2xl">
-                                {stats.averageProgress || 0}%
+                                {stats.averageProgress ?? 0}%
                             </h3>
                             <p className="text-[#8A9E95] text-sm">Avg Progress</p>
                         </div>
 
                         <div className="bg-white border-1 border-[#D8D6EF] flex flex-col p-5 rounded-xl">
                             <h3 className="font-semibold text-2xl">
-                                {stats.certificates || 0}
+                                {stats.certificates ?? 0}
                             </h3>
                             <p className="text-[#8A9E95] text-sm">Certificates</p>
                         </div>
