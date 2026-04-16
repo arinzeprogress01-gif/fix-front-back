@@ -42,11 +42,12 @@ export default function LearnerProfile() {
     const stats = profileData.stats || {};
     const courses = profileData.courses || [];
 
-    // ✅ FIX: USE THIS PROPERLY
+    //  FIX: USE THIS IN THIS WAY 
     const referenceNumber =
-        user?.role === "learner"
-            ? user?.learnerRef
-            : user?.tutorRef;
+        userData?.referenceNumber ||
+        userData?.learnerRef ||
+        userData?.tutorRef ||
+    "";
 
     // ✅ FIX: SAFE DATE HANDLING (THIS SOLVES N/A ISSUE)
     const joinedDate =
