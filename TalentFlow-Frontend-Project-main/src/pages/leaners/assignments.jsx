@@ -9,41 +9,29 @@ export default function Assignments() {
 
     const [assignments, setAssignments] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("All Status");
+    const [userData, setUserData] = useState(null);
 
     // 🔥 FETCH FROM BACKEND (getProgress)
     useEffect(() => {
-        const fetchAssignments = async () => {
+        const fetchUser = async () => {
             try {
-                const res = await axios.get("/api/progress", {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                const res = await axios.get(
+                    "https://talentflowbackend.onrender.com/api/user/me",
+                    {
+                        headers: {
+                            Authorization: `Bearer ${localStorage.getItem("token")}`
+                        }
                     }
-                });
+                );
 
-                const milestones = res.data.data.milestones || [];
-
-                // 🔥 Convert milestones → assignments
-                const mappedAssignments = milestones
-                    .filter(m => m.title.toLowerCase().includes("assignment"))
-                    .map((m, index) => ({
-                        id: index + 1,
-                        title: m.title,
-                        sub_title: m.course || "General Course",
-                        text: "Complete this assignment to progress in your course",
-                        status: "Pending",
-                        due: m.date,
-                        style: "bg-[#FFF8E6] text-[#D9771C]",
-                        link_text: "Submit Assignment"
-                    }));
-
-                setAssignments(mappedAssignments);
+                setUserData(res.data.data);
 
             } catch (err) {
-                console.error("Error fetching assignments", err);
+                console.error("Error fetching user", err);
             }
         };
 
-        fetchAssignments();
+        fetchUser();
     }, []);
 
     const assignment_status = ['All Status', 'Pending', 'Submitted', 'Graded', 'Overdue'];
@@ -77,9 +65,13 @@ export default function Assignments() {
         }
     ];
 
+    if (!userData) {
+        return <div className="p-5">Loading assignments...</div>;
+    }
+
     return (
         <>
-            <SideBar title="Assignments">
+            <SideBar title="Assignments" userData={userData}>
                 <div className="h-auto p-5 w-full">
                     <h3 className="font-semibold mt-3 text-2xl">Assignments</h3>
                     <p className="mt-2 text-[#8A9E95] text-sm">
