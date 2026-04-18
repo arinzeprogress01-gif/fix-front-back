@@ -14,6 +14,8 @@ export default function CourseOverview(){
     const token = localStorage.getItem("token");
     const { id } = useParams();
 
+    if (!backendCourse) return alert("Course not loaded yet");
+    
     const handleEnroll = async () => {
         try {
             await axios.post(
