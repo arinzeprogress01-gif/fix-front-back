@@ -12,10 +12,13 @@ export default function CourseOverview(){
     const [progressData, setProgressData] = useState(null)
     const [backendCourse, setBackendCourse] = useState(null);
     const token = localStorage.getItem("token");
+    const [userData, setUserData] = useState(null);
     const { id } = useParams();
 
-    if (!backendCourse) return alert("Course not loaded yet");
-    
+    if (!backendCourse) {
+    return <p className="p-5">Loading course...</p>;
+}
+
     const handleEnroll = async () => {
         try {
             await axios.post(
@@ -87,6 +90,28 @@ export default function CourseOverview(){
 
         if (token) fetchProgress();
     }, [token]);
+
+    useEffect(() => {
+    const fetchUser = async () => {
+        try {
+            const res = await axios.get(
+                "https://talentflowbackend.onrender.com/api/user/me",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            setUserData(res.data.data);
+
+        } catch (err) {
+            console.error("Error fetching user:", err.response?.data || err.message);
+        }
+    };
+
+    if (token) fetchUser();
+}, [token]);
     if (!dummycourses) return <p>Courses not available</p>;
 
     // const totalLessons = courses.modulesView.reduce((sum, module) => sum + (module.lessons?.length || 0), 0);
@@ -121,7 +146,7 @@ export default function CourseOverview(){
 
     return(
         <>
-            <SideBar title="Courses">
+            <SideBar title="Courses" userData={userData}>
                 <div className="h-auto w-full">
                     <div className="h-80 relative w-full">
                         <img src={courses.image} alt="Course Image" className="h-full object-cover w-full" />
