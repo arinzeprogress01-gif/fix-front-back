@@ -817,59 +817,243 @@ export const courseType = [
         ]
     },
     {
-        id: 3,
-        image: cosImg3,
-        status: '',
-        category: 'Data Science',
-        title: 'Data Analysics with Python',
-        text: 'Dive into data analysis using Python, pandas, and visualization libraries',
-        author: 'Oluwaseun Adeyemi',
-        modules: 5,
-        percent: 0,
-        weeks: 10,
-        modulesView: [
-            {
-                id: 1,
-                title: 'Python Basics',
-                sub_title: 'Learn the basics of Python programming to start your data analysis journey',
-                no_of_lessons: 0,
-                lesssons_completed: 0,
-                duration: 2,
-            },
-            {
-                id: 2,
-                title: 'Data Manipulation with Pandas',
-                sub_title: 'Explore data manipulation techniques using the pandas library in Python.',
-                no_of_lessons: 0,
-                lesssons_completed: 0,
-                duration: 2,
-            },
-            {
-                id: 3,
-                title: 'Data Visualization',
-                sub_title: 'Learn how to create visualizations to effectively communicate your data insights',
-                no_of_lessons: 0,
-                lesssons_completed: 0,
-                duration: 2,
-            },
-            {
-                id: 4,
-                title: 'Advanced Data Analysis',
-                sub_title: 'Dive into advanced data analysis techniques to extract meaningful insights from your data.',
-                no_of_lessons: 0,
-                lesssons_completed: 0,
-                duration: 2,
-            },
-            {
-                id: 5,
-                title: 'Machine Learning Basics',
-                sub_title: 'Get an introduction to machine learning concepts and their applications in data analysis',
-                no_of_lessons: 0,
-                lesssons_completed: 0,
-                duration: 2,
-            },
-        ]
-    },
+        {
+    id: 3,
+    image: cosImg3,
+    status: '',
+    category: 'Data Science',
+    title: 'Data Analytics with Python',
+    text: 'Master data analysis using Python, Pandas, visualization tools, and introductory machine learning techniques.',
+    author: 'Oluwaseun Adeyemi',
+    modules: 5,
+    percent: 0,
+    weeks: 10,
+
+    modulesView: [
+
+        // 🔹 MODULE 1
+        {
+            id: 1,
+            title: 'Python Basics',
+            sub_title: 'Build a strong foundation in Python programming for data analysis',
+            no_of_lessons: 2,
+            lesssons_completed: 0,
+            duration: 2,
+            lessons: [
+                {
+                    id: 1,
+                    title: 'Introduction to Python',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Introduction to Python",
+                        introduction: "Python is a versatile programming language widely used in data science due to its simplicity and powerful libraries.",
+                        sections: [
+                            {
+                                heading: "Why Python?",
+                                list: [
+                                    "Easy to learn and read",
+                                    "Large ecosystem (NumPy, Pandas, Matplotlib)",
+                                    "Used in real-world data analysis"
+                                ]
+                            },
+                            {
+                                heading: "Applications",
+                                list: [
+                                    "Data Analysis",
+                                    "Machine Learning",
+                                    "Web Development",
+                                    "Automation"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: 2,
+                    title: 'Variables and Data Types',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Variables & Data Types",
+                        introduction: "Variables store values in Python and data types define what kind of value is stored.",
+                        sections: [
+                            {
+                                heading: "Basic Types",
+                                list: ["int", "float", "string", "boolean"]
+                            },
+                            {
+                                heading: "Example",
+                                code: `x = 10
+name = "Data Analyst"
+price = 99.99
+isActive = True`
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+
+        // 🔹 MODULE 2
+        {
+            id: 2,
+            title: 'Data Manipulation with Pandas',
+            sub_title: 'Learn how to clean, transform, and analyze structured data',
+            no_of_lessons: 2,
+            lesssons_completed: 0,
+            duration: 2,
+            lessons: [
+                {
+                    id: 1,
+                    title: 'Introduction to Pandas',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Pandas Overview",
+                        introduction: "Pandas is the most important library for working with datasets in Python.",
+                        sections: [
+                            {
+                                heading: "Core Structures",
+                                list: ["Series (1D)", "DataFrame (2D)"]
+                            },
+                            {
+                                heading: "Example",
+                                code: `import pandas as pd
+df = pd.read_csv("data.csv")
+print(df.head())`
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: 2,
+                    title: 'Data Cleaning',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Data Cleaning",
+                        introduction: "Real-world data is messy. Cleaning ensures accuracy.",
+                        sections: [
+                            {
+                                heading: "Common Tasks",
+                                list: [
+                                    "Handling missing values",
+                                    "Removing duplicates",
+                                    "Fixing data formats"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+
+        // 🔹 MODULE 3
+        {
+            id: 3,
+            title: 'Data Visualization',
+            sub_title: 'Learn how to communicate insights using charts and graphs',
+            no_of_lessons: 2,
+            lesssons_completed: 0,
+            duration: 2,
+            lessons: [
+                {
+                    id: 1,
+                    title: 'Introduction to Visualization',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Data Visualization",
+                        introduction: "Visualization helps in understanding patterns and trends.",
+                        sections: [
+                            {
+                                heading: "Popular Tools",
+                                list: ["Matplotlib", "Seaborn"]
+                            }
+                        ]
+                    }
+                },
+                {
+                    id: 2,
+                    title: 'Creating Charts',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Charts",
+                        introduction: "Charts make data easier to interpret.",
+                        sections: [
+                            {
+                                heading: "Types",
+                                list: ["Bar Chart", "Line Chart", "Pie Chart"]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+
+        // 🔹 MODULE 4
+        {
+            id: 4,
+            title: 'Advanced Data Analysis',
+            sub_title: 'Apply analytical techniques to extract insights from datasets',
+            no_of_lessons: 1,
+            lesssons_completed: 0,
+            duration: 2,
+            lessons: [
+                {
+                    id: 1,
+                    title: 'Statistical Analysis',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Statistical Analysis",
+                        introduction: "Statistics helps in making sense of data.",
+                        sections: [
+                            {
+                                heading: "Concepts",
+                                list: ["Mean", "Median", "Standard Deviation"]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+
+        // 🔹 MODULE 5
+        {
+            id: 5,
+            title: 'Machine Learning Basics',
+            sub_title: 'Understand how machines learn from data',
+            no_of_lessons: 1,
+            lesssons_completed: 0,
+            duration: 2,
+            lessons: [
+                {
+                    id: 1,
+                    title: 'Introduction to Machine Learning',
+                    resource_type: 'Note',
+                    icon: LuBook,
+                    lessonContent: {
+                        title: "Machine Learning",
+                        introduction: "Machine Learning allows systems to learn from data without being explicitly programmed.",
+                        sections: [
+                            {
+                                heading: "Types",
+                                list: [
+                                    "Supervised Learning",
+                                    "Unsupervised Learning"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+
+    ]
+}
     {
         id: 4,
         image: cosImg4,
