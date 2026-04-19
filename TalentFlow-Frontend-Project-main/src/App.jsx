@@ -23,6 +23,7 @@ import LoginPage from './pages/auth/loginPage'
 import SignUpPage from './pages/auth/signUp'
 import TutorProfilePage from './pages/Tutor/tutorProfile'
 import ModuleViewer from "./path-to-your/ModuleViewer";
+import ModuleViewer from "./pages/ModuleViewer";
 
 function App() {
 
