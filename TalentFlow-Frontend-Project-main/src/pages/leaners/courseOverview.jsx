@@ -5,6 +5,13 @@ import { useState, useEffect } from "react";
 import { progressCards, courseType } from "./data/course";
 import { percent } from "framer-motion";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+
+const handleLessonClick = (lesson) => {
+    navigate("/module-viewer", { state: { lesson } });
+};
 export default function CourseOverview(){
     
     const [activeTab, setActiveTab] = useState("overview");
@@ -308,7 +315,7 @@ export default function CourseOverview(){
                                                             {openModule === module.id && module.no_of_lessons > 0 && module.lessons.map((data) => (
                                                                 <Link 
                                                                 // /newly edited for modules
-                                                                    to={`/course/${courses.id}/module/${module.id}`}
+                                                                    onClick={() => handleLessonClick(data)}
                                                                     className="bg-white cursor-pointer duration-300 flex group hover:border-1 hover:border-[#1A7A4A] p-3 rounded-lg space-x-2.5 transition-all w-full">
                                                                     <div className="bg-[#E8F5EC] flex h-8 items-center justify-center rounded text-[#1A7A4A] w-8">
                                                                         <data.icon />
