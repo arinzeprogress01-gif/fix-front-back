@@ -133,12 +133,12 @@ export default function Verification(){
                 required
               >
                 <option value="">Select Course</option>
-                <option value="69d3a887524a5f49708a4f5a">Frontend Development</option>
-                <option value="69d3a887524a5f49708a4f5b">Backend Development</option>
-                <option value="69d3a887524a5f49708a4f5c">UI/UX Design</option>
-                <option value="69d3a887524a5f49708a4f5d">Project Management</option>
-                <option value="69d3a887524a5f49708a4f5e">AI Integration</option>
-                <option value="69d3a887524a5f49708a4f5f">Machine Learning</option>
+                <option value="69e359fb322bec78f8267da1">Frontend Development</option>
+                <option value="69e359fb322bec78f8267da2">Backend Development</option>
+                <option value="69e359fb322bec78f8267da3">UI/UX Design</option>
+                <option value="69e359fb322bec78f8267da4">Project Management</option>
+                <option value="69e359fb322bec78f8267da5">AI Integration</option>
+                <option value="69e359fb322bec78f8267da6">Machine Learning</option>
               </select>
             </div>
 
