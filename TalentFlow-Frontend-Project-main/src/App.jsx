@@ -22,6 +22,7 @@ import TutorProfileSettings from './pages/Tutor/settings'
 import LoginPage from './pages/auth/loginPage'
 import SignUpPage from './pages/auth/signUp'
 import TutorProfilePage from './pages/Tutor/tutorProfile'
+import ModuleViewer from "./path-to-your/ModuleViewer";
 
 function App() {
 
@@ -58,6 +59,7 @@ function App() {
           <Route path='/student-course/:id/module/:moduleId/quiz/:lessonId' element={<QuizPage />}></Route>
           <Route path='/quiz-result/:id/:moduleId/quiz/:lessonId' element={<QuizSuccess />}></Route>
           <Route path='/quiz-result/:id/:moduleId/quiz/quiz-review/:lessonId' element={<QuizReview />}></Route>
+          <Route path="/course/:courseId/module/:moduleId" element={<ModuleViewer />} />
         </Routes>
       </Router>
 
