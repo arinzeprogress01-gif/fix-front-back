@@ -60,6 +60,7 @@ function App() {
           <Route path='/quiz-result/:id/:moduleId/quiz/:lessonId' element={<QuizSuccess />}></Route>
           <Route path='/quiz-result/:id/:moduleId/quiz/quiz-review/:lessonId' element={<QuizReview />}></Route>
           <Route path="/course/:courseId/module/:moduleId" element={<ModuleViewer />} />
+          <Route path="/module-viewer" element={<ModuleViewer />} />
         </Routes>
       </Router>
 
